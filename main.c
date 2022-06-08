@@ -16,12 +16,11 @@ static void leds_blink(const uint8_t* leds, const size_t size, const size_t dela
       gpio_write(*i, 0);
    }
 
-   for (register const uint8_t* i = leds + size - 2; ; --i)
+   for (register const uint8_t* i = leds + size - 2; i > leds; --i)
    {
       gpio_write(*i, 1);
       gpio_delay(delay_time);
       gpio_write(*i, 0);
-      if (i == leds) break;
    }
    return;
 }
@@ -50,14 +49,16 @@ static void leds_off(const uint8_t* leds, const size_t size)
 ***************************************************************************/
 int main(void)
 {
-   gpio_new(17, GPIO_DIRECTION_OUT);
-   gpio_new(22, GPIO_DIRECTION_OUT);
-   gpio_new(23, GPIO_DIRECTION_OUT);
-   gpio_new(27, GPIO_DIRECTION_IN);
-
    uint8_t leds[] = { 17, 22, 23 };
    uint8_t last_value = 0;
    bool leds_enabled = false;
+
+   for (register uint8_t* i = leds; i < leds + sizeof(leds); ++i)
+   {
+      gpio_new(*i, GPIO_DIRECTION_OUT);
+   }
+
+   gpio_new(27, GPIO_DIRECTION_IN);
 
    while (1)
    {

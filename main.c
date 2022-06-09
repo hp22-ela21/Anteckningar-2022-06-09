@@ -1,3 +1,13 @@
+/*************************************************************************************
+* GPIO-implementering för Raspberry Pi med det virtuella filsystemet sysfs.
+*
+* Kompilera programmet och skapa en körbar fil döpt example3 enligt nedan:
+* gcc main.c -o example1 -Wall
+*
+* Kör sedan programmet via följande kommando:
+* ./example3
+**************************************************************************************/
+
 /* Inkluderingsdirektiv: */
 #include "gpio.h"
 
@@ -69,11 +79,11 @@ int main(void)
 
       if (leds_enabled)
       {
-         leds_blink(leds, 3, 100);
+         leds_blink(leds, sizeof(leds), 100);
       }
       else
       {
-         leds_off(leds, 3);
+         leds_off(leds, sizeof(leds));
       }
    }
 

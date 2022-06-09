@@ -1,0 +1,101 @@
+#####################################################################################################
+Del I - Introduktion till funktioner i shell-script.
+#####################################################################################################
+
+Funktioner deklareras likt C, fast utan ingående argument i parentesen. En funktion döpt main kan deklareras enligt nedan:
+-----------------------------------------------------------------------------------------------------
+main()
+{
+   return 0
+}
+-----------------------------------------------------------------------------------------------------
+
+Det enda som kan returneras från en funktion är ifall en funktion lyckades exekvera eller inte.
+Returvärde 0 betyder att exekveringen lyckades, annars bör -1 returneras.
+
+En funktion anropas genom att enbart skriva dess namn. För att anropa funktionen main vid start så 
+bör denna funktion anropas längst ned i shell-scriptet:
+
+-----------------------------------------------------------------------------------------------------
+main # Anropar funktionen main vid start, så att programmet startar där såsom i C/C++.
+-----------------------------------------------------------------------------------------------------
+
+Skall en funktion döpt print anropas utan parametrar kan skrivs det enligt nedan:
+
+-----------------------------------------------------------------------------------------------------
+main()
+{
+   print # Anropar funktionen print utan parametrar.
+   return 0
+}
+-----------------------------------------------------------------------------------------------------
+
+Skall parametrar skickas med så skall dessa skrivas efter funktionens namn, separerade med ett blanksteg.
+Som exempel, för att passera talet 10 till funktionen print, kan följande kommando skrivas:
+
+-----------------------------------------------------------------------------------------------------
+main()
+{
+   print 10 # Anropar funktionen print och skickar med talet 10.
+   return 0
+}
+-----------------------------------------------------------------------------------------------------
+
+Varje ingående argument till en funktion erhåller ett namn $1, $2, $3 och så vidare i den ordning dom passeras,
+där $1 utgör första argumentet, $2 det andra argumentet och så vidare. I föregående funktionsanrop passerades
+bara en parameter, som därmed erhåller namnet $1. För att skriva ut detta i funktionen print kan denna funktion
+deklareras enligt nedan:
+
+-----------------------------------------------------------------------------------------------------
+print
+{
+   echo -e "$1\n" # Skriver ut passerad parameter, i ovanstående exempel talet 10.
+   return 0
+}
+-----------------------------------------------------------------------------------------------------
+
+#####################################################################################################
+Del II - Exempel på shell-script med funktioner.
+#####################################################################################################
+
+Nedanstående program visar exempel på hur personuppgifter i form av namn och ålder skall matas in fem gånger,
+vilket skrivs ut i en funktion döpt print, som anropas från funktionen main.
+
+: '
+print: Skriver ut en namn och ålder på en person. Ingående argument $1 utgörs av
+       namnet, medan $2 utgörs av åldern.
+'
+print()
+{
+   echo -e "\n--------------------------------------------------------------------------"
+   echo -e "Name: $1" # Skriver ut namnet (det första ingående argumentet).
+   echo -e "Age: $2" # Skriver ut åldern (det andra ingående argumentet).
+   echo -e "--------------------------------------------------------------------------\n"
+   return 0 # Indikerar att programexekveringen gick bra.
+}
+
+: '
+main: Ber användaren mata in sitt namn fem gånger och skriver ut det.
+      Utskrift sker via anrop av funktionen print.
+'
+main()
+{
+   # Lokala variabler:
+   local name
+   local age
+
+   # Itererar fem gånger:
+   for ((i = 0; i < 5; ++i))
+   do
+      echo -e "Enter your name:"
+      read name
+      echo -e "\nEnter your age:"
+      read age
+      print $name $age # Anropar funktionen print, skickar med innehållet i strängar name och age.
+   done
+
+   return 0 # Indikerar att programexekveringen gick bra (behövs ej).
+}
+
+# Anropar main vid start:
+main
